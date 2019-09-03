@@ -43,15 +43,15 @@ if ($tools =~ "R" or $tools =~ "r"){
 		chomp @snp;
 
 		my $col = join ("\t",$snp[0],$snp[1]);
-		my $primary = $snp[5];
-		my $secondary = $snp[6];
+		my $primary = $snp[4];
+		my $secondary = $snp[5];
 
 		my @out = ();
 		push @out, "$col";
 	
 		my $length = scalar(@snp) - 1;
 	
-		for ( my $i=11; $i<=$length; $i++ ) {
+		for ( my $i=10; $i<=$length; $i++ ) {
 			my @geno1 = split /\|/, $snp[$i];
 			my $geno2 = $geno1[0];
 
@@ -119,7 +119,7 @@ if ($tools =~ "T" or $tools =~ "t"){
 
 		my $length = scalar(@snp) - 1;
 
-		for ( my $i=11; $i<=$length; $i++ ) {
+		for ( my $i=10; $i<=$length; $i++ ) {
 			my @geno1 = split /\|/, $snp[$i];
 			my $geno2 = $geno1[0];
 
@@ -195,7 +195,7 @@ if ($tools =~ "P" or $tools =~ "p"){
 		$header =~ s/chr//;
 		my $Tpedfile = join("\t",$header,$snp_identifier,"0",$position);
 
-		my @geno = splice @input, 11; 
+		my @geno = splice @input, 10; 
 		foreach (@geno) {
 			my @geno1 = split /\|/, $_;
 			s/-/0 0/ for @geno1;

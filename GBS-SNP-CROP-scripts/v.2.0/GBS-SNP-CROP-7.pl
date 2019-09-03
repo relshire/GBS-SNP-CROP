@@ -193,6 +193,14 @@ while (<$VAR>) {
 			$hets++;
 			$row = "$row\t$pop_one_var/$pop_two_var|$primary_count/$alt_count";
 			$depth = $primary_count + $alt_count;
+		} elsif ( ($primary_count == $alt_count) and ($primary_count < 20) and ($primary_count >= $minHeteroDepth && $alt_count >= $minHeteroDepth)) {
+			$hets++;
+			$row = "$row\t$pop_one_var/$pop_two_var|$primary_count/$alt_count";
+			$depth = $primary_count + $alt_count;
+		} elsif ( ($primary_count == $alt_count) and $primary_count >= 20 and $alt_count >= ($AlleleFreqProp * $primary_count)) {
+			$hets++;
+			$row = "$row\t$pop_one_var/$pop_two_var|$primary_count/$alt_count";
+			$depth = $primary_count + $alt_count;
 
 		# Calling homozygotes
 		} elsif ( $primary_count >= $minHomoDepth && $alt_count == 0 ) {
@@ -203,6 +211,10 @@ while (<$VAR>) {
 			$homo_pri++;
 			$row = "$row\t$pop_one_var/$pop_one_var|$primary_count/1";
 			$depth = $primary_count;
+		} elsif ( $alt_count >= $minHomoDepthOneAlt && $primary_count == 1 ) {
+			$homo_alt++;
+			$row = "$row\t$pop_two_var/$pop_two_var|1/$alt_count";
+			$depth = $alt_count;
 		} elsif ( $alt_count >= $minHomoDepth && $primary_count == 0 ) {
 			$homo_alt++;
 			$row = "$row\t$pop_two_var/$pop_two_var|0/$alt_count";
@@ -249,15 +261,7 @@ while (<$VAR>) {
 		next;
 	}
 
-	# Categorizing variant type (SNP or indel)
-	my $VarType = "";
-	if ( $pop_one_var =~ /^(\+|-)/ or $pop_two_var =~ /^(\+|-)/ ) {
-		$VarType = "Indel";
-	} else {
-		$VarType = "SNP";
-	}
-
-	$row = join ("\t","$header","$position","$VarType","$ref","$avgDepth","$pop_one_var","$pop_two_var","$percentage_scored_genotypes","$homo_pri","$hets","$homo_alt$row" );
+	$row = join ("\t","$header","$position","$ref","$avgDepth","$pop_one_var","$pop_two_var","$percentage_scored_genotypes","$homo_pri","$hets","$homo_alt$row" );
 	print $DEST "$row\n";
 	$lc++;
 }
